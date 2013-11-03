@@ -86,13 +86,14 @@ var cmd = (function (o)
 	var view = function(s)
 	{
 		var c = document.createElement('div');
-		var i = document.createElement('input');
+		var i = document.createElement('textarea');
 		var w = document.createElement('div');
 		var sb = null;
 		c.className='cmd-container';
 		w.className = 'cmd-window';
 		w.style.height = s.height+'px';
 		i.className = 'cmd-input';
+		i.setAttribute('rows',1);
 		i.setAttribute('value', '> ');
 		i.setAttribute('spellcheck', 'false');
 		this.container = c;
@@ -115,9 +116,8 @@ var cmd = (function (o)
 			l.style.display='block';
 			l.innerText= o.text;
 			this.consoleWindow.insertBefore(l,this.consoleWindow.childNodes[0]);
-			if(s.inputFirst)
-				this.consoleWindow.scrollTop = objDiv.scrollHeight;
 		}
+		this.expandInput = function(){this.inputBox.setAttribute('rows',this.inputBox.getAttribute('rows')+1);}
 		this.render = function()
 		{
 			if(s.inputFirst)
@@ -151,6 +151,7 @@ var cmd = (function (o)
 		v.inputBox.onkeydown = function(e)
 		{
 			if(e.keyCode == 38) e.preventDefault();
+			if(e.keyCode == 13 && !e.shiftKey) e.preventDefault();
 		}
 		v.inputBox.onkeyup = function(e)
 		{
@@ -169,10 +170,15 @@ var cmd = (function (o)
 		};
 		var _enter = function(e)
 		{
-			var c = v.getInputvalue().replace(/^>(\s)*/,'');
-			v.setInputvalue('');
-			if(c.length>0)
-				v.appendResult(m.processCommand(c));
+			if(e.shiftKey)
+				v.expandInput();
+			else
+			{
+				var c = v.getInputvalue().replace(/^>(\s)*/,'');
+				v.setInputvalue('');
+				if(c.length>0)
+					v.appendResult(m.processCommand(c));
+			}
 		};
 		var _upArrow = function(e)
 		{
