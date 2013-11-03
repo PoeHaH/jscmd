@@ -115,6 +115,8 @@ var cmd = (function (o)
 			l.style.display='block';
 			l.innerText= o.text;
 			this.consoleWindow.insertBefore(l,this.consoleWindow.childNodes[0]);
+			if(s.inputFirst)
+				this.consoleWindow.scrollTop = objDiv.scrollHeight;
 		}
 		this.render = function()
 		{

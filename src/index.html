@@ -1,0 +1,13 @@
+<style>
+	.cmd-container{font-family: "Consolas", "Andale Mono", "Courier New", "Courier", monospace;display:block;}
+	.cmd-input{width:100%;display:block;border:none;padding:5px;background-color:#eee;outline:none;font-family: "Consolas", "Andale Mono", "Courier New", "Courier", monospace;}
+	.cmd-window{background-color:#eee;overflow:auto;white-space:pre-wrap;white-space:-moz-pre-wrap !important;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word;}
+	.cmd-line{padding:5px;border-bottom:1px solid white;}
+	.cmd-number{color:green;}
+	.cmd-error{color:red;}
+</style>
+<script src="jscmd.js"></script>
+<div id="mydiv"></div>
+<script>
+cmd.init({container:'mydiv',inputFirst:false,sandbox:true});
+</script>
