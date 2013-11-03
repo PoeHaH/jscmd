@@ -1,1 +1,4 @@
-This script adds a JavaScript console straight in your website. Usefull for bloggers who'd like their readers to test code right away.
+This script allows to add a JavaScript console (similar to the browser's debugger) 
+straight in your website.
+
+It can be useful for JavaScript bloggers who's readers can test code while reading.
