@@ -1,4 +1,4 @@
-var cmd = (function (o)
+var cmd = (function ()
 {	
 	//private stuff
 	var settings = {sandbox:true,height:250,showHints:true,inputFirst:true};
@@ -68,9 +68,10 @@ var cmd = (function (o)
 				if(currPosition != historyPosition) historyPosition = currPosition;
 				try{
 					var r = scope.eval(c);
+					var t = typeof r;
 					//if no circular references & browser support, we can use JSON.stringify
 					if(!isCircular(r) && typeof JSON ==='object' && typeof JSON.stringify === 'function')r=JSON.stringify(r);
-					return {type:typeof r,text:r};
+					return {type:t,text:r};
 				}catch(e){
 					return {type:'error',text:e.name+': '+e.message};
 				}
@@ -94,7 +95,7 @@ var cmd = (function (o)
 		w.style.height = s.height+'px';
 		i.className = 'cmd-input';
 		i.setAttribute('rows',1);
-		i.setAttribute('value', '> ');
+		i.value='> ';
 		i.setAttribute('spellcheck', 'false');
 		this.container = c;
 		this.inputBox = i;
@@ -108,6 +109,8 @@ var cmd = (function (o)
 		this.sandbox = sb;
 		this.getInputvalue = function(){return this.inputBox.value;};
 		this.setInputvalue = function(v){this.inputBox.value = '> '+v;};
+		this.addRow = function(){/*this.inputBox.setAttribute('rows',parseInt(this.inputBox.getAttribute('rows'))+1*/ console.log(parseFloat(window.getComputedStyle(this.inputBox,null).getPropertyValue('font-size')));};
+		this.subtractRow = function(){this.inputBox.setAttribute('rows',parseInt(this.inputBox.getAttribute('rows'))-1)};
 		this.appendResult=function(o)
 		{
 			var l = document.createElement('span');
@@ -116,8 +119,8 @@ var cmd = (function (o)
 			l.style.display='block';
 			l.innerText= o.text;
 			this.consoleWindow.insertBefore(l,this.consoleWindow.childNodes[0]);
-		}
-		this.expandInput = function(){this.inputBox.setAttribute('rows',this.inputBox.getAttribute('rows')+1);}
+		};
+		this.expandInput = function(){this.addRow();};
 		this.render = function()
 		{
 			if(s.inputFirst)
@@ -144,7 +147,7 @@ var cmd = (function (o)
 		v.render();
 		m.setScope(window);
 		if(v.sandbox != null)m.setScope(v.sandbox.contentWindow);
-		m.getScope().console.log = function(m){if(m!=null && typeof m !== 'undefined')return m.toString();else if(m == null)return m; else return typeof m;};
+		m.getScope().console.log = function(m){if(m!=null && typeof m !== 'undefined')return m;else if(m == null)return m; else return typeof m;};
 		m.getScope().console.dir = function(o){if(typeof o === 'object'){var t = '';for (var k in o){if(o[k]!=null)t += k+' : '+o[k].toString()+'. ';else t += k+' : null. ';}return m.getScope().console.log(t);}else return m.getScope().console.log(o);}
 		v.sandbox.contentWindow.parent=null;
 		var inputMap = {38:'_upArrow',40:'_downArrow',13:'_enter'};
@@ -205,5 +208,6 @@ var cmd = (function (o)
 			var c = new controller(settings);
 		}
 	};
+	console.log('init');
 	return p;
 })();
