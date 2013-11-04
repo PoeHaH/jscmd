@@ -32,7 +32,12 @@ var cmd = (function ()
 		};
 		this.addCommand=function(c)
 		{
-			commands.push(c);
+			if(this.getPreviousCommand()!=c)
+			{
+				commands.push(c);
+				currPosition ++;
+				if(currPosition != historyPosition) historyPosition = currPosition;
+			}
 		};
 		function isCircular(o)
 		{
@@ -64,8 +69,6 @@ var cmd = (function ()
 			{
 				c = c.trim();
 				this.addCommand(c);
-				currPosition ++;
-				if(currPosition != historyPosition) historyPosition = currPosition;
 				try{
 					var r = scope.eval(c);
 					var t = typeof r;
