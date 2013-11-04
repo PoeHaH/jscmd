@@ -5,8 +5,8 @@
 		<meta charset="UTF-8">
 		<title>Test page</title>
 		<style>
-			.cmd-container{font-family: "Consolas", "Andale Mono", "Courier New", "Courier", monospace;display:block;background-color:#333;padding:7px;}
-			.cmd-input{resize:none;width:100%;border:none;background-color:#333;outline:none;font-family: "Consolas", "Andale Mono", "Courier New", "Courier", monospace;color:white;overflow:hidden;}
+			.cmd-container{overflow:hidden;position:relative;font-family: "Consolas", "Andale Mono", "Courier New", "Courier", monospace;background-color:#333;padding:7px;}
+			.cmd-input{position:relative;resize:none;width:100%;border:none;background-color:#333;outline:none;font-family: "Consolas", "Andale Mono", "Courier New", "Courier", monospace;color:white;overflow:hidden;}
 			.cmd-window{overflow:auto;white-space:pre-wrap;white-space:-moz-pre-wrap !important;white-space:-pre-wrap;white-space:-o-pre-wrap;word-wrap:break-word;}
 			.cmd-line{padding-bottom:4px;padding-top:4px;color:white;}
 			.cmd-number{color:#77f364;}
@@ -19,7 +19,7 @@
 	<body>
 		<div id="mydiv"></div>
 		<script>
-			cmd.init({container:'mydiv'});
+			cmd.init({container:'mydiv',inputFirst:true});
 		</script>
 	</body>
 </html>

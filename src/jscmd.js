@@ -1,3 +1,7 @@
+if (!String.prototype.trim)
+{
+	String.prototype.trim=function(){return this.replace(/^\s+|\s+$/g, '');};
+}
 var cmd = (function ()
 {	
 	//private stuff
@@ -76,7 +80,7 @@ var cmd = (function ()
 					if(!isCircular(r) && typeof JSON ==='object' && typeof JSON.stringify === 'function')r=JSON.stringify(r);
 					return {type:t,text:r};
 				}catch(e){
-					return {type:'error',text:e.name+': '+e.message};
+					return {type:'error',text:e.name+': '+e.message+'. Stack:'+e.stack};
 				}
 			}
 			else throw new Error("Can't perform command without a scope");
@@ -112,8 +116,11 @@ var cmd = (function ()
 		this.sandbox = sb;
 		this.getInputvalue = function(){return this.inputBox.value;};
 		this.setInputvalue = function(v){this.inputBox.value = '> '+v;};
-		this.addRow = function(){this.inputBox.setAttribute('rows',parseInt(this.inputBox.getAttribute('rows'))+1)};
-		this.subtractRow = function(){this.inputBox.setAttribute('rows',parseInt(this.inputBox.getAttribute('rows'))-1)};
+		this.setInputHeight = function()
+		{
+			var r = this.inputBox.value.split(/\r\n|\r|\n/).length*parseInt(this.inputBox.getAttribute('data-h'));
+			this.inputBox.style.height = r+"px";	
+		}
 		this.appendResult=function(o)
 		{
 			var l = document.createElement('span');
@@ -121,9 +128,8 @@ var cmd = (function ()
 			l.className += ' cmd-'+o.type;
 			l.style.display='block';
 			l.innerText= o.text;
-			this.consoleWindow.insertBefore(l,this.consoleWindow.childNodes[0]);
+			this.consoleWindow.insertBefore(l,this.consoleWindow.childNodes[0]||null);
 		};
-		this.expandInput = function(){this.addRow();};
 		this.render = function()
 		{
 			if(s.inputFirst)
@@ -137,6 +143,7 @@ var cmd = (function ()
 				this.container.appendChild(this.inputBox);
 			}
 			document.getElementById(s.container).appendChild(this.container);
+			this.inputBox.setAttribute('data-h',(this.inputBox.clientHeight));
 			if(s.sandbox && this.sandbox!=null)
 			{
 				document.body.appendChild(this.sandbox);
@@ -149,18 +156,27 @@ var cmd = (function ()
 		var v = new view(s);
 		v.render();
 		m.setScope(window);
-		if(v.sandbox != null)m.setScope(v.sandbox.contentWindow);
+		if(v.sandbox != null)
+		{
+			m.setScope(v.sandbox.contentWindow);
+			if(typeof v.sandbox.contentWindow.console === 'undefined')
+				v.sandbox.contentWindow.console = window.console;
+		}
 		m.getScope().console.log = function(m){if(m!=null && typeof m !== 'undefined')return m;else if(m == null)return m; else return typeof m;};
 		m.getScope().console.dir = function(o){if(typeof o === 'object'){var t = '';for (var k in o){if(o[k]!=null)t += k+' : '+o[k].toString()+'. ';else t += k+' : null. ';}return m.getScope().console.log(t);}else return m.getScope().console.log(o);}
-		v.sandbox.contentWindow.parent=null;
+		
+		try{v.sandbox.contentWindow.parent=null}catch(e){};
 		var inputMap = {38:'_upArrow',40:'_downArrow',13:'_enter'};
 		v.inputBox.onkeydown = function(e)
 		{
-			if(e.keyCode == 38) e.preventDefault();
-			if(e.keyCode == 13 && !e.shiftKey) e.preventDefault();
+			e = e||window.event;//IE does not pass event argument, it uses window.event instead
+			v.setInputHeight();
+			if(e.keyCode == 38)e.preventDefault ? e.preventDefault() : e.returnValue = false;
+			if(e.keyCode == 13 && !e.shiftKey)e.preventDefault ? e.preventDefault() : e.returnValue = false;
 		}
 		v.inputBox.onkeyup = function(e)
 		{
+			e = e||window.event;
 			switch(inputMap[e.keyCode])
 			{
 				case '_enter':_enter(e);break;
@@ -168,6 +184,7 @@ var cmd = (function ()
 				case '_downArrow':_downArrow(e);break;
 				default:_keyUp(e);
 			}
+			v.setInputHeight();
 		};
 		var _keyUp =function(e)
 		{
@@ -176,9 +193,7 @@ var cmd = (function ()
 		};
 		var _enter = function(e)
 		{
-			if(e.shiftKey)
-				v.expandInput();
-			else
+			if(!e.shiftKey)
 			{
 				var c = v.getInputvalue().replace(/^>(\s)*/,'');
 				v.setInputvalue('');
