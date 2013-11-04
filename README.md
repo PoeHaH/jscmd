@@ -1,7 +1,7 @@
 # A JavaScript console inside your page
 
 This is a small module that turns a container div on your web page into a JavaScript console.
-It's specially interesting for bloggers who write about JavaScript and want to offer their users
+It's specially interesting for bloggers who write about JavaScript and want to offer their readers
 the possibility to test code immediately.
 
 ## Features
