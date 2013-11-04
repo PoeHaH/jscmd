@@ -109,7 +109,7 @@ var cmd = (function ()
 		this.sandbox = sb;
 		this.getInputvalue = function(){return this.inputBox.value;};
 		this.setInputvalue = function(v){this.inputBox.value = '> '+v;};
-		this.addRow = function(){/*this.inputBox.setAttribute('rows',parseInt(this.inputBox.getAttribute('rows'))+1*/ console.log(parseFloat(window.getComputedStyle(this.inputBox,null).getPropertyValue('font-size')));};
+		this.addRow = function(){this.inputBox.setAttribute('rows',parseInt(this.inputBox.getAttribute('rows'))+1)};
 		this.subtractRow = function(){this.inputBox.setAttribute('rows',parseInt(this.inputBox.getAttribute('rows'))-1)};
 		this.appendResult=function(o)
 		{
