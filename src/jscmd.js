@@ -25,7 +25,6 @@ var cmd = (function ()
 		{
 			var r = commands[historyPosition==commands.length-1?historyPosition:historyPosition-1];
 			if(typeof r !== 'undefined') historyPosition --;
-			console.log(r);
 			return r;
 		};
 		this.getNextCommand = function()
@@ -74,13 +73,15 @@ var cmd = (function ()
 				c = c.trim();
 				this.addCommand(c);
 				try{
+					if (!scope.eval && scope.execScript)
+						scope.execScript("null"); // for <=IE8. Hack to have iframe.eval method magically appear.Otherwise it's undefined.
 					var r = scope.eval(c);
 					var t = typeof r;
 					//if no circular references & browser support, we can use JSON.stringify
 					if(!isCircular(r) && typeof JSON ==='object' && typeof JSON.stringify === 'function')r=JSON.stringify(r);
 					return {type:t,text:r};
 				}catch(e){
-					return {type:'error',text:e.name+': '+e.message+'. Stack:'+e.stack};
+					return {type:'error',text:e.name+': '+e.message,extra:e.stack};
 				}
 			}
 			else throw new Error("Can't perform command without a scope");
@@ -127,8 +128,9 @@ var cmd = (function ()
 			l.className = 'cmd-line';
 			l.className += ' cmd-'+o.type;
 			l.style.display='block';
-			l.innerText= o.text;
-			this.consoleWindow.insertBefore(l,this.consoleWindow.childNodes[0]||null);
+			l.innerHTML= o.text;
+			if(o.type == 'error' && typeof o.extra !== 'undefined') l.setAttribute('title',o.extra);
+			this.consoleWindow.insertBefore(l,this.consoleWindow.hasChildNodes()?this.consoleWindow.childNodes[0]:null);
 		};
 		this.render = function()
 		{
@@ -158,13 +160,12 @@ var cmd = (function ()
 		m.setScope(window);
 		if(v.sandbox != null)
 		{
-			m.setScope(v.sandbox.contentWindow);
 			if(typeof v.sandbox.contentWindow.console === 'undefined')
 				v.sandbox.contentWindow.console = window.console;
+			m.setScope(v.sandbox.contentWindow);
 		}
 		m.getScope().console.log = function(m){if(m!=null && typeof m !== 'undefined')return m;else if(m == null)return m; else return typeof m;};
 		m.getScope().console.dir = function(o){if(typeof o === 'object'){var t = '';for (var k in o){if(o[k]!=null)t += k+' : '+o[k].toString()+'. ';else t += k+' : null. ';}return m.getScope().console.log(t);}else return m.getScope().console.log(o);}
-		
 		try{v.sandbox.contentWindow.parent=null}catch(e){};
 		var inputMap = {38:'_upArrow',40:'_downArrow',13:'_enter'};
 		v.inputBox.onkeydown = function(e)
@@ -226,6 +227,5 @@ var cmd = (function ()
 			var c = new controller(settings);
 		}
 	};
-	console.log('init');
 	return p;
 })();

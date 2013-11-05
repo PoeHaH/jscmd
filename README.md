@@ -1,18 +1,22 @@
 # A JavaScript console inside your page
 
 This is a small module that turns a container div on your web page into a JavaScript console.
-It's specially interesting for bloggers who write about JavaScript and want to offer their readers
+It's especially interesting for bloggers who write about JavaScript and want to offer their readers
 the possibility to test code immediately.
 
 ## Features
 
-* Can be sandboxed: playing around won't affect your page and its objects.
+* Can be sandboxed: playing around won't affect your page context.
+* Consult command history via up/down arrow keys.
 * Beautiful GUI.
+* Auto growing text area.
 
-##To do
+## To do
 
 * Code hinting
-* Auto growing text area
+
+## Issues
+* Console.log() and other console functions don't work in IE 6-8.
 
 ## License
 
