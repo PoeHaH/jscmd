@@ -213,7 +213,6 @@ var cmd = (function ()
 			{
 				settings[p] = s[p];
 			}
-			mainHints = setHints();
 			var c = new controller(settings);
 		}
 	};
