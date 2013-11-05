@@ -6,17 +6,18 @@ the possibility to test code immediately.
 
 ## Features
 
-* Can be sandboxed: playing around won't affect your page context.
-* Consult command history via up/down arrow keys.
-* Beautiful GUI.
-* Auto growing text area.
+* Can be sandboxed: playing around won't affect your page context
+* Consult command history via up/down arrow keys
+* Beautiful GUI
+* Auto growing text area
 
 ## To do
 
 * Code hinting
 
 ## Issues
-* Console.log() and other console functions don't work in IE 6-8.
+* Console.log() and other console functions don't work in IE 6-8
+* When text area auto sized, it text flickers
 
 ## License
 

@@ -4,17 +4,7 @@ if (!String.prototype.trim)
 }
 var cmd = (function ()
 {	
-	//private stuff
 	var settings = {sandbox:true,height:250,showHints:true,inputFirst:true};
-	var mainHints,seconHints = [];
-	var setHints = function(f)
-	{
-		f = f || window;
-		var r =[];
-		for(var k in f)
-			r.push(k);
-		return r;
-	}
 	var model = function(s)
 	{
 		var scope = null;
