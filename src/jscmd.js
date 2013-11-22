@@ -102,7 +102,8 @@ var cmd = (function ()
 		{
 			sb = document.createElement('iframe');
 			sb.setAttribute('height', '0');
-			sb.style.visibility='hidden';
+			sb.setAttribute('width','0');
+			sb.style.display='none';
 		}
 		this.sandbox = sb;
 		this.getInputvalue = function(){return this.inputBox.value;};
