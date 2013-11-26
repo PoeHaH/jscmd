@@ -4,20 +4,9 @@ This is a small module that turns a container div on your web page into a JavaSc
 It's especially interesting for bloggers who write about JavaScript and want to offer their readers
 the possibility to test code immediately.
 
-## Features
+## Demo, documentation & features
 
-* Can be sandboxed: playing around won't affect your page context
-* Consult command history via up/down arrow keys
-* Beautiful GUI
-* Auto growing text area
-
-## To do
-
-* Code hinting
-
-## Issues
-* Console.log() and other console functions don't work in IE 6-8
-* When text area auto sized, it text flickers
+[Click here](http://maartenbelmans.com/blog/js-cmd-tiny-javascript-console)
 
 ## License
 
