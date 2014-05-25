@@ -4,7 +4,7 @@ if (!String.prototype.trim)
 }
 var cmd = (function ()
 {	
-	var settings = {sandbox:true,height:250,showHints:true,inputFirst:true};
+	var settings = {sandbox:true,height:250,inputFirst:true,initialCommand:null};
 	var model = function(s)
 	{
 		var scope = null;
@@ -159,6 +159,11 @@ var cmd = (function ()
 		m.getScope().console.dir = function(o){if(typeof o === 'object'){var t = '';for (var k in o){if(o[k]!=null)t += k+' : '+o[k].toString()+'. ';else t += k+' : null. ';}return m.getScope().console.log(t);}else return m.getScope().console.log(o);}
 		try{v.sandbox.contentWindow.parent=null}catch(e){};
 		var inputMap = {38:'_upArrow',40:'_downArrow',13:'_enter'};
+		if(s.initialCommand!=null)
+		{
+			v.setInputvalue(s.initialCommand);
+			v.appendResult(m.processCommand(s.initialCommand));
+		}
 		v.inputBox.onkeydown = function(e)
 		{
 			e = e||window.event;//IE does not pass event argument, it uses window.event instead
@@ -214,6 +219,8 @@ var cmd = (function ()
 			{
 				settings[p] = s[p];
 			}
+			if(window.location.hash && window.location.hash.replace('#','').length>0)
+				settings.initialCommand = window.location.hash.replace('#','');
 			var c = new controller(settings);
 		}
 	};
